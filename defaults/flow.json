@@ -1,1 +1,143 @@
-[{"id":"b1b11140.4e4ef","type":"inject","name":"","topic":"","payload":"Hello Node-RED!","payloadType":"string","repeat":"","crontab":"","once":false,"x":141,"y":61,"z":"a09be5e0.5f6418","wires":[["f2f2649a.0d0d98"]]},{"id":"f2f2649a.0d0d98","type":"debug","name":"","active":true,"console":"false","complete":"false","x":401,"y":87,"z":"a09be5e0.5f6418","wires":[]}]
+[
+    {
+        "id": "ab4c9edb.36406",
+        "type": "tab",
+        "label": "Visual-Recognition",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "1b56b72d.313a59",
+        "type": "http response",
+        "z": "ab4c9edb.36406",
+        "name": "HTTP response",
+        "statusCode": "",
+        "headers": {},
+        "x": 861,
+        "y": 33,
+        "wires": []
+    },
+    {
+        "id": "45265a8e.363034",
+        "type": "http in",
+        "z": "ab4c9edb.36406",
+        "name": "Get Home Page",
+        "url": "/home",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 111,
+        "y": 33,
+        "wires": [
+            [
+                "e21a202.b9eade"
+            ]
+        ]
+    },
+    {
+        "id": "e21a202.b9eade",
+        "type": "template",
+        "z": "ab4c9edb.36406",
+        "name": "Form and Response Template",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<style>\nh4 {\ntext-align: center;\nmargin: 10px;\n}\ntable {\nwidth: 480px;\nmargin-top: 10px;\n}\nth, td {\npadding: 8px;\ntext-align: left;\nborder-bottom: 1px solid #ddd;\nbackground-color: #FFFFFF;\nwidth: 50%;\n}\n.classifier {\nbackground-color: rgb(85,150,230);\ntext-align: center;\n}\n.title {\nbackground-color:LightGrey;\n}\ninput[type=submit]{\nbackground-color: rgb(85,150,230);\nborder: none;\ncolor: white;\npadding: 12px 18px;\ntext-decoration: none;\nmargin: 4px 2px;\ncursor: pointer;\nfont-size: 15px;\nborder-radius: 10px;\n}\n</style>\n \n <html>\n     <body>\n        <h2>\n             Let Watson Guess!\n        </h2>\n        <form action=\"/classify\" method=\"post\" enctype=\"multipart/form-data\">\n            <input type=\"file\" name=\"pic\" accept=\"image/*\"><br/>\n            <input type=\"submit\" value=\"Submit\">\n        </form>\n        <div>{{#result}}\n          I have a confidence level of <b>{{images.0.classifiers.0.classes.0.score}}</b> that this is\n          <b>{{images.0.classifiers.0.classes.0.class}}</b><br/><br/>\n          {{/result}}\n        </div>\n        <div>\n            {{#result}}\n            Classifications:<br/><br/>\n            <table>\n            <tr>\n                <th>Class</th>\n                <th>Score</th>\n                <th>Type</th>\n            </tr>\n            {{#images}}\n            {{#.}}\n            {{#classifiers}}\n            {{#.}}\n            {{#classes}}\n            {{#.}}\n                <tr>\n                    <td>{{class}}</td>\n                    <td>{{score}}</td> \n                    <td>{{&type_hierarchy}}</td>\n                </tr>                \n            {{/.}} \n            {{/classes}}            \n            {{/.}}            \n            {{/classifiers}}\n            {{/.}}\n            {{/images}}\n            </table>\n            {{/result}}\n        </div>\n     </body>\n</html>",
+        "x": 588.5,
+        "y": 33,
+        "wires": [
+            [
+                "1b56b72d.313a59"
+            ]
+        ]
+    },
+    {
+        "id": "101bd8cd.2e5097",
+        "type": "function",
+        "z": "ab4c9edb.36406",
+        "name": " Determine File Path",
+        "func": "if (msg.req.files) {\n    var files = Object.keys(msg.req.files);\n    msg.payload = msg.req.files[files[0]][0].path;    \n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 169.5,
+        "y": 164,
+        "wires": [
+            [
+                "f3167b64.18076"
+            ]
+        ]
+    },
+    {
+        "id": "3c9ef42.a5b818c",
+        "type": "visual-recognition-v3",
+        "z": "ab4c9edb.36406",
+        "name": "Watson Image Classification",
+        "vr-service-endpoint": "https://gateway.watsonplatform.net/visual-recognition/api",
+        "image-feature": "classifyImage",
+        "lang": "en",
+        "x": 501,
+        "y": 165,
+        "wires": [
+            [
+                "98346719.2820a",
+                "e21a202.b9eade"
+            ]
+        ]
+    },
+    {
+        "id": "98346719.2820a",
+        "type": "debug",
+        "z": "ab4c9edb.36406",
+        "name": "Debug output",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "result",
+        "targetType": "msg",
+        "x": 851.5,
+        "y": 164,
+        "wires": []
+    },
+    {
+        "id": "f3167b64.18076",
+        "type": "file-buffer",
+        "z": "ab4c9edb.36406",
+        "name": "Multipart file buffer",
+        "x": 322,
+        "y": 231,
+        "wires": [
+            [
+                "3c9ef42.a5b818c"
+            ]
+        ]
+    },
+    {
+        "id": "72a285d.327607c",
+        "type": "httpInMultipart",
+        "z": "ab4c9edb.36406",
+        "name": "Classify Image",
+        "url": "/classify",
+        "method": "post",
+        "fields": "[{ \"name\":\"pic\"}]",
+        "swaggerDoc": "",
+        "x": 107,
+        "y": 106,
+        "wires": [
+            [
+                "101bd8cd.2e5097"
+            ]
+        ]
+    },
+    {
+        "id": "b01fb8fc.1f7d5",
+        "type": "comment",
+        "z": "ab4c9edb.36406",
+        "name": "Credits",
+        "info": "Based on the following example snippet: [https://www.npmjs.com/package/node-red-contrib-file-buffer]()",
+        "x": 963.5,
+        "y": 250,
+        "wires": []
+    }
+]

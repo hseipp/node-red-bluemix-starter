@@ -1,5 +1,20 @@
+declared-services:
+  letwatsonguess-hs-cloudantNoSQLDB:
+    label: cloudantNoSQLDB
+	plan: Lite
+  Visual Recognition-ov:
+    label: watson_vision_combined
+    plan: Lite
 applications:
-- memory: 256M
-  env:
-    OPTIMIZE_MEMORY: true
-  command: node index.js --settings ./bluemix-settings.js -v
+  - path: .
+    name: letwatsonguess-hs
+    environment_json: {}
+    env:
+      OPTIMIZE_MEMORY: true
+      command: node index.js --settings ./bluemix-settings.js -v
+    memory: 256M
+    instances: 1
+    disk_quota: 1024M
+    services:
+      - letwatsonguess-hs-cloudantNoSQLDB
+      - Visual Recognition-ov
