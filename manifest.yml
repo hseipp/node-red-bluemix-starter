@@ -1,8 +1,8 @@
 declared-services:
-  letwatsonguess-hs-cloudantNoSQLDB:
+  letwatsonguess-cloudantNoSQLDB:
     label: cloudantNoSQLDB
     plan: Lite
-  Visual Recognition-ov:
+  letwatsonguess-visualRecognition:
     label: watson_vision_combined
     plan: Lite
 applications:
@@ -16,5 +16,5 @@ applications:
     instances: 1
     disk_quota: 1024M
     services:
-      - letwatsonguess-hs-cloudantNoSQLDB
-      - Visual Recognition-ov
+      - letwatsonguess-cloudantNoSQLDB
+      - letwatsonguess-visualRecognition
