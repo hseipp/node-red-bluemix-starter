@@ -22,12 +22,8 @@ stages:
         script: |-
             #!/bin/bash
             CLOUDANT_NAME="letwatsonguess-cloudantNoSQLDB"
-            cf push "${CF_APP}" --no-start
-            cf set-env "${CF_APP}" NODE_RED_STORAGE_NAME "${CLOUDANT_NAME}"
             cf create-service cloudantNoSQLDB Lite "${CLOUDANT_NAME}"
-            sleep 15
-            cf bind-service "${CF_APP}" "${CLOUDANT_NAME}" -c '{"role":"Manager"}'
-            cf start "${CF_APP}"
+            cf push "${CF_APP}"
             # View logs
             cf logs "${CF_APP}" --recent
         target:
