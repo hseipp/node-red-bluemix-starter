@@ -27,7 +27,7 @@ stages:
             cf create-service cloudantNoSQLDB Lite "${CLOUDANT_NAME}"
             cf bind-service "${CF_APP}" "${CLOUDANT_NAME}" -c '{"role":"Manager"}'
             VR_NAME="letwatsonguess-visualRecognition"
-            cf create-service watson_vision_combined Lite "${VR_NAME}"
+            cf create-service watson_vision_combined lite "${VR_NAME}"
             cf bind-service "${CF_APP}" "${VR_NAME}" -c '{"role":"Manager"}'
             cf start "${CF_APP}"
             # View logs
