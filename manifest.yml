@@ -1,7 +1,7 @@
 declared-services:
   letwatsonguess-hs-cloudantNoSQLDB:
     label: cloudantNoSQLDB
-	plan: Lite
+    plan: Lite
   Visual Recognition-ov:
     label: watson_vision_combined
     plan: Lite
