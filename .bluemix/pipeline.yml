@@ -25,7 +25,12 @@ stages:
             cf push "${CF_APP}" --no-start
             cf set-env "${CF_APP}" NODE_RED_STORAGE_NAME "${CLOUDANT_NAME}"
             cf create-service cloudantNoSQLDB Lite "${CLOUDANT_NAME}"
-            sleep 60
+            for i in `seq 1 100`; do
+              RESULT=`cf service ${CLOUDANT_NAME} | grep status: | awk '{print $3}'`
+              if [ $RESULT == "succeeded" ]; then
+                break
+              fi
+            done
             cf bind-service "${CF_APP}" "${CLOUDANT_NAME}" -c '{"role":"Manager"}'
             cf start "${CF_APP}"
             # View logs
