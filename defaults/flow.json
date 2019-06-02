@@ -1,143 +1,143 @@
 [
     {
-        "id": "ab4c9edb.36406",
+        "id": "f4304e4e.b80648",
         "type": "tab",
-        "label": "Visual-Recognition",
+        "label": "Face Detection",
         "disabled": false,
         "info": ""
     },
     {
-        "id": "1b56b72d.313a59",
+        "id": "a892712.27e611",
         "type": "http response",
-        "z": "ab4c9edb.36406",
+        "z": "f4304e4e.b80648",
         "name": "HTTP response",
         "statusCode": "",
         "headers": {},
-        "x": 861,
-        "y": 33,
+        "x": 853,
+        "y": 38,
         "wires": []
     },
     {
-        "id": "45265a8e.363034",
+        "id": "be76ab26.4547a",
         "type": "http in",
-        "z": "ab4c9edb.36406",
+        "z": "f4304e4e.b80648",
         "name": "Get Home Page",
         "url": "/home",
         "method": "get",
         "upload": false,
         "swaggerDoc": "",
-        "x": 111,
-        "y": 33,
+        "x": 99,
+        "y": 35,
         "wires": [
             [
-                "e21a202.b9eade"
+                "2a565503.d556e2"
             ]
         ]
     },
     {
-        "id": "e21a202.b9eade",
+        "id": "2a565503.d556e2",
         "type": "template",
-        "z": "ab4c9edb.36406",
+        "z": "f4304e4e.b80648",
         "name": "Form and Response Template",
         "field": "payload",
         "fieldType": "msg",
         "format": "handlebars",
         "syntax": "mustache",
-        "template": "<style>\nh4 {\ntext-align: center;\nmargin: 10px;\n}\ntable {\nwidth: 480px;\nmargin-top: 10px;\n}\nth, td {\npadding: 8px;\ntext-align: left;\nborder-bottom: 1px solid #ddd;\nbackground-color: #FFFFFF;\nwidth: 50%;\n}\n.classifier {\nbackground-color: rgb(85,150,230);\ntext-align: center;\n}\n.title {\nbackground-color:LightGrey;\n}\ninput[type=submit]{\nbackground-color: rgb(85,150,230);\nborder: none;\ncolor: white;\npadding: 12px 18px;\ntext-decoration: none;\nmargin: 4px 2px;\ncursor: pointer;\nfont-size: 15px;\nborder-radius: 10px;\n}\n</style>\n \n <html>\n     <body>\n        <h2>\n             Let Watson Guess!\n        </h2>\n        <form action=\"/classify\" method=\"post\" enctype=\"multipart/form-data\">\n            <input type=\"file\" name=\"pic\" accept=\"image/*\"><br/>\n            <input type=\"submit\" value=\"Submit\">\n        </form>\n        <div>{{#result}}\n          I have a confidence level of <b>{{images.0.classifiers.0.classes.0.score}}</b> that this is\n          <b>{{images.0.classifiers.0.classes.0.class}}</b><br/><br/>\n          {{/result}}\n        </div>\n        <div>\n            {{#result}}\n            Classifications:<br/><br/>\n            <table>\n            <tr>\n                <th>Class</th>\n                <th>Score</th>\n                <th>Type</th>\n            </tr>\n            {{#images}}\n            {{#.}}\n            {{#classifiers}}\n            {{#.}}\n            {{#classes}}\n            {{#.}}\n                <tr>\n                    <td>{{class}}</td>\n                    <td>{{score}}</td> \n                    <td>{{&type_hierarchy}}</td>\n                </tr>                \n            {{/.}} \n            {{/classes}}            \n            {{/.}}            \n            {{/classifiers}}\n            {{/.}}\n            {{/images}}\n            </table>\n            {{/result}}\n        </div>\n     </body>\n</html>",
-        "x": 588.5,
-        "y": 33,
+        "template": "<style>\nh4 {\ntext-align: center;\nmargin: 10px;\n}\ntable {\nwidth: 480px;\nmargin-top: 10px;\n}\nth, td {\npadding: 8px;\ntext-align: left;\nborder-bottom: 1px solid #ddd;\nbackground-color: #FFFFFF;\nwidth: 50%;\n}\n.classifier {\nbackground-color: rgb(85,150,230);\ntext-align: center;\n}\n.title {\nbackground-color:LightGrey;\n}\ninput[type=submit]{\nbackground-color: rgb(85,150,230);\nborder: none;\ncolor: white;\npadding: 12px 18px;\ntext-decoration: none;\nmargin: 4px 2px;\ncursor: pointer;\nfont-size: 15px;\nborder-radius: 10px;\n}\n</style>\n \n <html>\n     <body>\n        <h2>\n             Let Watson Guess!\n        </h2>\n        <form action=\"/facedetect\" method=\"post\" enctype=\"multipart/form-data\">\n            <input type=\"file\" name=\"pic\" accept=\"image/*\"/><br/>\n            <input type=\"submit\" value=\"Detect Faces\"/>\n        </form>\n        <div>\n            {{#result}}\n            <br/>Faces:<br/>\n            <table>\n            <tr>\n                <th>Age</th>\n                <th>Score (Age)</th>\n                <th>Gender</th>\n                <th>Score (Gender)</th>\n            </tr>\n            {{#images}}\n            {{#.}}\n            {{#faces}}\n            {{#.}}\n                <tr>\n                    <td>{{age.min}}-{{age.max}}</td>\n                    <td>{{age.score}}</td> \n                    <td>{{gender.gender}}</td>\n                    <td>{{gender.score}}</td>\n                </tr>                \n            {{/.}} \n            {{/faces}}            \n            {{/.}}\n            {{/images}}\n            </table>\n            {{/result}}\n        </div>\n     </body>\n</html>",
+        "x": 613.5,
+        "y": 38,
         "wires": [
             [
-                "1b56b72d.313a59"
+                "a892712.27e611"
             ]
         ]
     },
     {
-        "id": "101bd8cd.2e5097",
+        "id": "109b75f.ac3a60a",
         "type": "function",
-        "z": "ab4c9edb.36406",
+        "z": "f4304e4e.b80648",
         "name": " Determine File Path",
         "func": "if (msg.req.files) {\n    var files = Object.keys(msg.req.files);\n    msg.payload = msg.req.files[files[0]][0].path;    \n}\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 169.5,
-        "y": 164,
+        "x": 319.5,
+        "y": 105,
         "wires": [
             [
-                "f3167b64.18076"
+                "c0d3caa7.1906f"
             ]
         ]
     },
     {
-        "id": "3c9ef42.a5b818c",
+        "id": "c0d3caa7.1906f",
+        "type": "file-buffer",
+        "z": "f4304e4e.b80648",
+        "name": "Multipart file buffer",
+        "x": 327,
+        "y": 174,
+        "wires": [
+            [
+                "e2d23b10.85d33"
+            ]
+        ]
+    },
+    {
+        "id": "30a7ad78.818672",
+        "type": "comment",
+        "z": "f4304e4e.b80648",
+        "name": "Credits",
+        "info": "Based on the following example snippet: [https://www.npmjs.com/package/node-red-contrib-file-buffer]()",
+        "x": 88.5,
+        "y": 276,
+        "wires": []
+    },
+    {
+        "id": "e2d23b10.85d33",
         "type": "visual-recognition-v3",
-        "z": "ab4c9edb.36406",
-        "name": "Watson Image Classification",
-        "vr-service-endpoint": "https://gateway.watsonplatform.net/visual-recognition/api",
-        "image-feature": "classifyImage",
+        "z": "f4304e4e.b80648",
+        "name": "Watson Face Detection",
+        "vr-service-endpoint": "https://gateway-a.watsonplatform.net/visual-recognition/api",
+        "image-feature": "detectFaces",
         "lang": "en",
-        "x": 501,
-        "y": 165,
+        "x": 469.5,
+        "y": 239,
         "wires": [
             [
-                "98346719.2820a",
-                "e21a202.b9eade"
+                "b2cf4d71.7378",
+                "2a565503.d556e2"
             ]
         ]
     },
     {
-        "id": "98346719.2820a",
+        "id": "b2cf4d71.7378",
         "type": "debug",
-        "z": "ab4c9edb.36406",
-        "name": "Debug output",
+        "z": "f4304e4e.b80648",
+        "name": "Debug Output",
         "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
         "complete": "result",
         "targetType": "msg",
-        "x": 851.5,
-        "y": 164,
+        "x": 733.5,
+        "y": 239,
         "wires": []
     },
     {
-        "id": "f3167b64.18076",
-        "type": "file-buffer",
-        "z": "ab4c9edb.36406",
-        "name": "Multipart file buffer",
-        "x": 322,
-        "y": 231,
-        "wires": [
-            [
-                "3c9ef42.a5b818c"
-            ]
-        ]
-    },
-    {
-        "id": "72a285d.327607c",
+        "id": "8825e83a.95e5a8",
         "type": "httpInMultipart",
-        "z": "ab4c9edb.36406",
-        "name": "Classify Image",
-        "url": "/classify",
+        "z": "f4304e4e.b80648",
+        "name": "Detect Faces",
+        "url": "/facedetect",
         "method": "post",
         "fields": "[{ \"name\":\"pic\"}]",
         "swaggerDoc": "",
-        "x": 107,
-        "y": 106,
+        "x": 90,
+        "y": 105,
         "wires": [
             [
-                "101bd8cd.2e5097"
+                "109b75f.ac3a60a"
             ]
         ]
-    },
-    {
-        "id": "b01fb8fc.1f7d5",
-        "type": "comment",
-        "z": "ab4c9edb.36406",
-        "name": "Credits",
-        "info": "Based on the following example snippet: [https://www.npmjs.com/package/node-red-contrib-file-buffer]()",
-        "x": 963.5,
-        "y": 250,
-        "wires": []
     }
 ]
